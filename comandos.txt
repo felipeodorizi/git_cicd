@@ -1,0 +1,8 @@
+docker exec -it kafka kafka-console-producer   --bootstrap-server localhost:9092   --topic kafka-python-topic
+Digitar a Mensagem
+
+
+docker exec -it kafka kafka-console-consumer   --bootstrap-server localhost:9092   --topic kafka-python-topic   --from-beginning
+
+
+
