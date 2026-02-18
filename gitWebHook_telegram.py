@@ -22,6 +22,9 @@ def github_webhook():
 
     print(f"Evento recebido: {event}")
 
+
+
+
     # Detalhar conforme o tipo de evento
     if event == "push":
         branch = data.get("ref")
