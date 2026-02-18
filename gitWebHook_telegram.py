@@ -9,7 +9,7 @@ bot = telebot.TeleBot("7576015296:AAHPoWA5p6WPrYdcwk_MXXB-EWaN2SBPlLA")
 chat_id = -5290134232
 
 
-def send_telegram_message(message):Miniconda3-latest-Linux-x86_64.sh
+def send_telegram_message(message):
     """Envia mensagem Telegram"""
     bot.send_message(chat_id, message)
 
