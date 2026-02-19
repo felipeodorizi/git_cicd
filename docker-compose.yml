@@ -34,18 +34,18 @@ services:
     depends_on:
       - kafka
 
-  app:
-    build: .
-    container_name: python-app
-    depends_on:
-      - kafka
-    environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9094
-    volumes:
-      - .:/app
-    ports:
-      - "5000:5000"
-    command: ["python", "app.py"]
+#  app:
+#    build: .
+#    container_name: python-app
+#    depends_on:
+#      - kafka
+#    environment:
+#      - KAFKA_BOOTSTRAP_SERVERS=kafka:9094
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "5000:5000"
+#    command: ["python", "app.py"]
 
 volumes:
   kafka-data:
