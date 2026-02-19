@@ -36,52 +36,14 @@ def github_webhook():
     data = request.json
 
     print(f"Evento recebido: {event}")
-    send_kafka_message(data)
+    # Combina evento + payload 
+    message = { 
+        "event": event, 
+        "payload": data 
+    } 
+    send_kafka_message(message)
+    send_telegram_message(f"GitHub Evento: {event} - {data['repository']['full_name']} ")
 
-    # Detalhar conforme o tipo de evento
-    if event == "push":
-        branch = data.get("ref")
-        commits = data.get("commits", [])
-        msg = f"📦 Push na branch: {branch}"
-        print(msg)
-        send_telegram_message(msg)
-        for commit in commits:
-            send_telegram_message("GITHUB")
-            msg = f"📦 - Autor: {commit['author']['name']}"
-            print(msg)
-            send_telegram_message(msg)
-            msg = f"📦  Mensagem: {commit['message']}"
-            print(msg)
-            send_telegram_message(msg)
-            msg = f"📦  Arquivos alterados: {commit.get('modified', [])}"
-            print(msg)
-            send_telegram_message(msg)
-            # Chamar script bash 
-            subprocess.run(["./ci_cd.sh"])
-
-
-    elif event == "pull_request":
-        action = data.get("action")
-        pr = data.get("pull_request", {})
-        send_telegram_message("GITHUB")
-        msg = f"📦 Pull Request {action}: #{pr.get('number')} - {pr.get('title')}"
-        print(msg)
-        send_telegram_message(msg)
-
-    elif event == "issues":
-        action = data.get("action")
-        issue = data.get("issue", {})
-        msg = f"📦 Issue {action}: #{issue.get('number')} - {issue.get('title')}"
-        send_telegram_message("GITHUB")
-        print(msg)
-        send_telegram_message(msg)
-
-    else:
-        # Para qualquer outro evento, imprime o JSON completo
-        msg = f"📦 Payload bruto: {data}"
-        send_telegram_message("📦 GITHUB")
-        print(msg)
-        send_telegram_message(msg)
 
     return "OK", 200
 
