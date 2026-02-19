@@ -1,5 +1,6 @@
 from flask import Flask, request
 import requests
+import json
 import time
 import telebot
 import subprocess
@@ -22,7 +23,7 @@ def send_telegram_message(message):
 
 def send_kafka_message(message):
     """Envia mensagem para Kafka"""
-    producer.send('github_webhooks', message)
+    producer.send('github_webhooks', value=json.dumps(message))
     producer.flush() # força envio imediato
     print("Mensagem enviada para o tópico github_webhooks!")
 
@@ -35,7 +36,7 @@ def github_webhook():
     data = request.json
 
     print(f"Evento recebido: {event}")
-
+    send_kafka_message(data)
 
     # Detalhar conforme o tipo de evento
     if event == "push":
@@ -44,21 +45,17 @@ def github_webhook():
         msg = f"📦 Push na branch: {branch}"
         print(msg)
         send_telegram_message(msg)
-        send_kafka_message(msg)
         for commit in commits:
             send_telegram_message("GITHUB")
             msg = f"📦 - Autor: {commit['author']['name']}"
             print(msg)
             send_telegram_message(msg)
-            send_kafka_message(msg)
             msg = f"📦  Mensagem: {commit['message']}"
             print(msg)
             send_telegram_message(msg)
-            send_kafka_message(msg)
             msg = f"📦  Arquivos alterados: {commit.get('modified', [])}"
             print(msg)
             send_telegram_message(msg)
-            send_kafka_message(msg)
             # Chamar script bash 
             subprocess.run(["./ci_cd.sh"])
 
@@ -70,7 +67,6 @@ def github_webhook():
         msg = f"📦 Pull Request {action}: #{pr.get('number')} - {pr.get('title')}"
         print(msg)
         send_telegram_message(msg)
-        send_kafka_message(msg)
 
     elif event == "issues":
         action = data.get("action")
@@ -79,7 +75,6 @@ def github_webhook():
         send_telegram_message("GITHUB")
         print(msg)
         send_telegram_message(msg)
-        send_kafka_message(msg)
 
     else:
         # Para qualquer outro evento, imprime o JSON completo
@@ -87,7 +82,6 @@ def github_webhook():
         send_telegram_message("📦 GITHUB")
         print(msg)
         send_telegram_message(msg)
-        send_kafka_message(msg)
 
     return "OK", 200
 
