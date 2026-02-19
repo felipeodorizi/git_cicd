@@ -5,25 +5,14 @@ import telebot
 import subprocess
 import hmac, hashlib
 from kafka import KafkaProducer
-from kafka.errors import NoBrokersAvailable
 
 bot = telebot.TeleBot("7576015296:AAHPoWA5p6WPrYdcwk_MXXB-EWaN2SBPlLA")
 #chat_id = 8552683290
 chat_id = -5290134232
 
-try:
-    producer = KafkaProducer(bootstrap_servers=["kafka:9094"])
-    print("Consegui conectar ao Kafka!")
-except NoBrokersAvailable:
-    print("Kafka não disponível.")
-
 def send_telegram_message(message):
     """Envia mensagem Telegram"""
     bot.send_message(chat_id, message)
-
-def send_kafka_message(message):
-    """Envia mensagem para Kafka"""
-    producer.send('github_webhooks', message)
 
 app = Flask(__name__)
 
