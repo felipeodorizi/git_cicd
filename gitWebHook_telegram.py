@@ -2,17 +2,27 @@ from flask import Flask, request
 import requests
 import time
 import telebot
-import subprocess 
+import subprocess
+import hmac, hashlib
+from kafka import KafkaProducer
 
 bot = telebot.TeleBot("7576015296:AAHPoWA5p6WPrYdcwk_MXXB-EWaN2SBPlLA")
 #chat_id = 8552683290
 chat_id = -5290134232
 
-
+# Configuração do Kafka
+producer = KafkaProducer(
+    bootstrap_servers=['kafka:9092'],  # ajuste para o host/porta corretos
+    value_serializer=lambda v: v.encode('utf-8')
+)
 
 def send_telegram_message(message):
     """Envia mensagem Telegram"""
     bot.send_message(chat_id, message)
+
+def send_kafka_message(message):
+    """Envia mensagem para Kafka"""
+    producer.send('github_webhooks', message)
 
 app = Flask(__name__)
 
