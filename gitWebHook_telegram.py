@@ -12,7 +12,7 @@ chat_id = -5290134232
 
 # Configuração do Kafka
 producer = KafkaProducer(
-    bootstrap_servers=['https://kd674s-9092.csb.app/'],  # ajuste para o host/porta corretos
+    bootstrap_servers=['kafka:9092'],  # ajuste para o host/porta corretos
     value_serializer=lambda v: v.encode('utf-8')
 )
 
