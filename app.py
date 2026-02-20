@@ -42,7 +42,7 @@ def github_webhook():
         "payload": data 
     } 
     send_kafka_message(message)
-    send_telegram_message(f"GitHub Evento: {event} - {data['repository']['full_name']} ")
+    send_telegram_message(f"GitHub Evento: {event}  ")
 
 
     return "OK", 200
