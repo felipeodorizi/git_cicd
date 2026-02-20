@@ -14,7 +14,7 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,DOCKER://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,DOCKER://kafka:9094,CONTROLLER://kafka:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,DOCKER://kafka:9094,CONTROLLER://kafka:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,DOCKER:PLAINTEXT,CONTROLLER:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -33,29 +33,6 @@ services:
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9094
     depends_on:
       - kafka
-
-  #  app:
-  #    build: .
-  #    container_name: python-app
-  #    depends_on:
-  #      - kafka
-  #    environment:
-  #      - KAFKA_BOOTSTRAP_SERVERS=kafka:9094
-  #    volumes:
-  #      - .:/app
-  #    ports:
-  #      - "5000:5000"
-  #    command: ["python", "app.py"]
-
-  rest-proxy:
-    image: confluentinc/cp-kafka-rest:7.5.0
-    depends_on:
-      - kafka
-    ports:
-      - "8443:8082" # expõe REST Proxy na porta 8443 do host
-    environment:
-      KAFKA_REST_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
-      KAFKA_REST_LISTENERS: http://0.0.0.0:8082
 
 volumes:
   kafka-data:
